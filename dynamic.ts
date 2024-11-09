@@ -1,7 +1,7 @@
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
+//import for link generation and pdf creation
 
-// Function to populate resume data in the template
 function generateRes() {
     const nameField = (document.getElementById('nameField') as HTMLInputElement).value;
     const contactField = (document.getElementById('contactField') as HTMLInputElement).value;
@@ -16,7 +16,6 @@ function generateRes() {
     const experienceField = (document.getElementById('experienceField') as HTMLTextAreaElement).value;
     const certificationsField = (document.getElementById('certificationsField') as HTMLTextAreaElement).value;
 
-    // Set the fields in the template
     document.getElementById("NameT")!.textContent = nameField;
     document.getElementById("phony")!.textContent = contactField;
     document.getElementById("mailme")!.textContent = emailField;
@@ -29,12 +28,10 @@ function generateRes() {
     document.getElementById("projT")!.textContent = certificationsField;
     document.getElementById("expe")!.textContent = experienceField;
     document.getElementById("edu")!.textContent = educationField;
-
     document.getElementById('cvgen')!.style.display = 'none';
     document.getElementById('cv-template')!.style.display = 'block';
 }
 
-// Function to generate a shareable link based on the username
 function generateShareableLink() {
     const nameField = (document.getElementById('nameField') as HTMLInputElement).value;
     const usernameField = (document.getElementById('usernameField') as HTMLInputElement).value;
@@ -45,7 +42,6 @@ function generateShareableLink() {
         // Add other relevant data here
     };
 
-    // Send a POST request to your Vercel serverless function
     fetch('/api/generateLink', {
         method: 'POST',
         headers: {
@@ -64,7 +60,6 @@ function generateShareableLink() {
     });
 }
 
-// Function to download the resume as a PDF
 function downloadPDF() {
     html2canvas(document.getElementById("cv-template")!).then(canvas => {
         const imgData = canvas.toDataURL("image/png");
@@ -74,7 +69,6 @@ function downloadPDF() {
     });
 }
 
-// Event listeners for buttons
 document.getElementById("generateBtn")?.addEventListener("click", generateRes);
 document.getElementById("downloadBtn")?.addEventListener("click", downloadPDF);
 document.getElementById("linkBtn")?.addEventListener("click", generateShareableLink);
