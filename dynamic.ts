@@ -1,97 +1,80 @@
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 
+// Function to populate resume data in the template
 function generateRes() {
-  // Set resume template content once
-document.getElementById("NameT")!.textContent = (document.getElementById('nameField') as HTMLInputElement).value;
-document.getElementById("phony")!.textContent = (document.getElementById('contactField') as HTMLInputElement).value;
-  // ... other fields ...
+    const nameField = (document.getElementById('nameField') as HTMLInputElement).value;
+    const contactField = (document.getElementById('contactField') as HTMLInputElement).value;
+    const emailField = (document.getElementById('emailField') as HTMLInputElement).value;
+    const addressField = (document.getElementById('addressField') as HTMLTextAreaElement).value;
+    const linkedInField = (document.getElementById('linkedInField') as HTMLInputElement).value;
+    const webField = (document.getElementById('webField') as HTMLInputElement).value;
+    const githubField = (document.getElementById('githubField') as HTMLInputElement).value;
+    const objectiveField = (document.getElementById('objectiveField') as HTMLTextAreaElement).value;
+    const skillsField = (document.getElementById('skillsField') as HTMLTextAreaElement).value;
+    const educationField = (document.getElementById('educationField') as HTMLTextAreaElement).value;
+    const experienceField = (document.getElementById('experienceField') as HTMLTextAreaElement).value;
+    const certificationsField = (document.getElementById('certificationsField') as HTMLTextAreaElement).value;
 
-  // ... rest of your form field assignments ...
+    // Set the fields in the template
+    document.getElementById("NameT")!.textContent = nameField;
+    document.getElementById("phony")!.textContent = contactField;
+    document.getElementById("mailme")!.textContent = emailField;
+    document.getElementById("Addr1")!.textContent = addressField;
+    document.getElementById("linkT")!.textContent = linkedInField;
+    document.getElementById("webdev")!.textContent = webField;
+    document.getElementById("repoT")!.textContent = githubField;
+    document.getElementById("ObjT")!.textContent = objectiveField;
+    document.getElementById("skillz")!.textContent = skillsField;
+    document.getElementById("projT")!.textContent = certificationsField;
+    document.getElementById("expe")!.textContent = experienceField;
+    document.getElementById("edu")!.textContent = educationField;
+
+    document.getElementById('cvgen')!.style.display = 'none';
+    document.getElementById('cv-template')!.style.display = 'block';
 }
 
-function downloadPDF() {
-const resumeElement = document.getElementById("resumeContent");
-
-if (resumeElement) {
-    html2canvas(resumeElement).then((canvas) => {
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
-
-    const imgWidth = 190;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-    pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
-    pdf.save("resume.pdf");
-    });
-} else {
-    console.error("Resume content not found.");
-}
-}
-
+// Function to generate a shareable link based on the username
 function generateShareableLink() {
-const resumeData = {
-    name: (document.getElementById('nameField') as HTMLInputElement).value,
-    contact: (document.getElementById('contactField') as HTMLInputElement).value,
-    // ... other fields ...
-};
+    const nameField = (document.getElementById('nameField') as HTMLInputElement).value;
+    const usernameField = (document.getElementById('usernameField') as HTMLInputElement).value;
 
-if (!resumeData.name || !resumeData.contact){
-    alert("Please fill in all required fields.");
-    return;
+    const resumeData = {
+        name: nameField,
+        username: usernameField,
+        // Add other relevant data here
+    };
+
+    // Send a POST request to your Vercel serverless function
+    fetch('/api/generateLink', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(resumeData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        const shareableLink = data.url;
+        console.log("Shareable Link:", shareableLink);
+        alert("Shareable Link: " + shareableLink);
+    })
+    .catch(error => {
+        console.error("Error generating shareable link:", error);
+    });
 }
 
-fetch('/api/generateLink', {
-    method: 'POST',
-    body: JSON.stringify(resumeData)
-})
-.then(response => response.json())
-.then(data => {
-    const shareableLink = data.url;
-    console.log("Shareable Link:", shareableLink);
-    // Display or copy the link to the clipboard
-})
-.catch(error => {
-    console.error("Error generating shareable link:", error);
-    alert("An error occurred. Please try again later.");
-});
+// Function to download the resume as a PDF
+function downloadPDF() {
+    html2canvas(document.getElementById("cv-template")!).then(canvas => {
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 10, 10);
+        pdf.save("resume.pdf");
+    });
 }
 
 // Event listeners for buttons
 document.getElementById("generateBtn")?.addEventListener("click", generateRes);
 document.getElementById("downloadBtn")?.addEventListener("click", downloadPDF);
 document.getElementById("linkBtn")?.addEventListener("click", generateShareableLink);
-
-// pages/api/generateLink.js
-import { NextApiRequest, NextApiResponse } from 'next';
-import { v4 as uuidv4 } from 'uuid';
-
-interface ResumeData {name: string;
-contact: string;
-  // ... other fields
-}
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-if (req.method === 'POST') {
-    try {
-const resumeData: ResumeData = req.body;
-
-      // Validate resume data here
-if (!resumeData.name || !resumeData.contact) {
-        return res.status(400).json({ error: 'Missing required fields' });
-}
-
-      // Store resume data (e.g., in a database or file system)
-      // ...
-
-const uniqueUrl = `https://${req.headers.host}/resume/${uuidv4()}`;
-
-res.status(200).json({ url: uniqueUrl });
-    } catch (error) {
-console.error('Error generating shareable link:', error);
-res.status(500).json({ error: 'Internal Server Error' });
-    }
-} else {
-    res.status(405).json({ message: 'Method Not Allowed' });
-}
-}
