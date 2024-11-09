@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Generator</title>
+    <link rel="stylesheet" href="styling.css">
+</head>
+<body>
+    <script src="dynamic.js"></script>
+<!--This is the library to download in pdf version-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+    <div id="cv-form">
+
+    <h1 class="Ress">Resume Generator</h1>
+    <div class="bodypart">
+
+        <div class="left-col">
+            <h3>Personal Information</h3>
+            <div class="formgroup">
+                <div class="form-2d">
+                    <label for="nameField">Your Name: </label><br>
+                    <input type="text" id="nameField" placeholder="John Doe" class="form-control"><br>
+                </div>
+
+                <div class="form-2d">
+                    <label for="contactField">Your Contact: </label><br>
+                    <input type="text" id="contactField" placeholder="+92**********" class="form-control"><br>
+                </div>
+
+                <div class="form-2d">
+                    <label for="emailField">Your Email: </label><br>
+                    <input type="text" id="emailField" placeholder="something@gmail.com" class="form-control"><br>
+                </div>
+
+                <div class="form-2d">
+                    <label for="addressField">Your Address: </label><br>
+                    <textarea id="addressField" placeholder="St7, Ohio, US" class="form-control" rows="2"></textarea>
+                </div>
+
+                <p class="secondary">Important Links</p>
+                <div class="form-2d-a">
+                    <label for="linkedInField">LinkedIn: </label><br>
+                    <input type="text" id="linkedInField" placeholder="linkedin.com/yourname" class="form-control"><br>
+                </div>
+
+                <div class="form-2d-a">
+                    <label for="webField">Website:</label><br>
+                    <input type="text" id="webField" placeholder="www.myawesomesite.io" class="form-control"><br>
+                </div>
+
+                <div class="form-2d-a">
+                    <label for="githubField">Github: </label><br>
+                    <input type="text" id="githubField" placeholder="github.com/JohnDoe" class="form-control"><br>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-col">
+            <h3>Professional Information</h3>
+            <div class="formside">
+                <label for="objectiveField">Objective </label><br>
+                <textarea id="objectiveField" placeholder="Enter your career objective" class="form-control weField"
+                rows="3"></textarea>
+            </div>
+
+            <div class="formside">
+                <label for="skillsField">Skills </label><br>
+                <textarea id="skillsField" placeholder="Enter your skills" class="form-control weField" rows="3"></textarea>
+            </div>
+
+            <div class="formside">
+                <label for="educationField">Education:</label><br>
+                <div id="Ed">                
+                    <textarea id="educationField" placeholder="Enter your education details" class="form-control edField" rows="3"></textarea><br>
+                </div>
+                
+            </div>
+
+
+            <div class="formside">
+                <label for="experienceField">Experience: </label><br>
+                <div id="we">
+                    <textarea id="experienceField" placeholder="Enter your work experience" class="form-control" rows="3"></textarea>
+                </div>
+                
+            </div>
+
+            <div class="formside">
+                <label for="certificationsField">Certifications: </label><br>
+                <textarea id="certificationsField" placeholder="Enter your certifications" class="form-control" rows="3"></textarea>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="cvdisplay">
+        <button onclick="generateRes()" id="generateBtn" class="btt">Generate CV</button>
+    </div>
+
+</div>
+
+<!--- Start of Resume Generate -->
+
+
+<div class="resume-container" id="cvgen">
+
+    <!-- Left Sidebar -->
+    <div class="left-column">
+        <div class="profile-picture">
+            <img src="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="Profile Picture">
+        </div>
+        <div class="contact-info">
+            <p id="Addr1"><strong>Address:</strong> 4670 Garrett Street, Philadelphia, PA, US</p>
+            <p id="phony"><strong>Phone:</strong> +1 267-981-2091</p>
+            <p id="mailme"><strong>Email:</strong> jason@webdeveloper.com</p>
+            <p id="webdev"><strong>Website:</strong> www.JasonMBou.com</p>
+            <div class="social-links">
+                <p id="linkT"><strong>LinkedIn:</strong> JasonMBou</p>
+                <p id="repoT"><strong>GitHub:</strong> JasonMBou</p>
+            </div>
+        </div>
+        <div class="skills-section">
+            <h3>Project Management</h3>
+            <ul id="projT">
+                <li>Jira</li>
+                <li>Slack</li>
+                <li>Trello</li>
+            </ul>
+            <h3>Design & Coding</h3>
+            <ul id="skillz">
+                <li>HTML, CSS</li>
+                <li>JavaScript, jQuery</li>
+                <li>Angular, Ember, React</li>
+                <li>Responsive UI Design</li>
+                <li>WordPress</li>
+                <li>Adobe Photoshop</li>
+                <li>Visual Studio</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="right-column" id="cv-template">
+        <div class="header">
+            <h1 id="NameT">Jason M. Bourassa</h1>
+            <p id="TitleT">Front End Developer with a keen eye for detail</p>
+        </div>
+        
+        <div class="section profile">
+            <h2>Profile</h2>
+            <p id="ObjT">Seasoned and independent Front End Developer with 5 years of experience in blending the art of design with skill of programming to deliver an immersive and engaging user experience through efficient website development, proactive feature optimization, and relentless debugging.</p>
+        </div>
+
+        <div class="section experience">
+            <h2>Experience</h2>
+            <div class="job">
+                <h3 id="expe">Front End Developer / Henser Ltd.</h3>
+                <p id="expe" >Sep 2017 - Present | Philadelphia, PA</p>
+                <ul id="expe">
+                    <li>Deliver engaging user experience through optimization of images, code, and cross-browser compatibility.</li>
+                    <li>Designed dynamic and responsive compatible pages using HTML5, CSS3, jQuery, and JavaScript.</li>
+                    <li>Built single page applications (SPA) with HTML5 and CSS3 media queries.</li>
+                </ul>
+            </div>
+            <div class="job">
+                <h3>Front End Developer / Henser Ltd.</h3>
+                <p>Sep 2014 - Aug 2017 | Philadelphia, PA</p>
+                <ul>
+                    <li>Delivered responsive websites, achieving 19% faster load time.</li>
+                    <li>Developed training UI/UX interfaces into code while producing high-quality, reusable markup using HTML5 and CSS3.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="section education">
+            <h2>Education</h2>
+            <p><strong>Associate in Computer Science</strong> | Saint Maria University</p>
+            <p>Sep 2011 - Jul 2014</p>
+        </div>
+        <div class="section education">
+            <h2>Certification</h2>
+            <p><strong>Associate in Computer Science</strong> | Saint Maria University</p>
+            <p>Sep 2011 - Jul 2014</p>
+        </div>
+    </div>
+
+    
+</div>
+
+<div class="cvdisplay">
+    <button onclick="downloadPDF()" id="downloadBtn" class="btt">Download as PDF</button>
+</div>
+
+<div class="cvdisplay">
+    <button onclick="generateShareableLink()" id="linkBtn" class="btt">Generate Shareable Link</button>
+</div>
+</body>
+</html>
